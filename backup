@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function tar_gz {
+    mkdir -p data
+    tar -czvf data/$1.tar.gz $2
+}
+
+function backup_apache {
+    tar_gz apache-config /etc/apache2
+    tar_gz apache-vhosts /srv/www/vhosts
+    tar_gz letsencrypt  /etc/letsencrypt
+}
+
+function backup_mysql {
+    echo "please entry your mysql root password:"
+    mysqldump -u root -p --all-databases > data/mysql-dump.sql
+}
+
+function backup_user {
+    tar_gz user-ssh ~/.ssh
+    tar_gz user-gpg ~/.gnupg
+}
+
+backup_apache
+backup_mysql
+backup_user
+
